@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import Editor from './Editor.jsx';
 
 const CATEGORIES = ['All', 'Landing', 'Portfolio', 'Dashboard', 'Blog'];
 
@@ -112,25 +113,21 @@ function Templates() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((t) => (
-            <TemplateCard key={t.id} template={t} accent={accent} onSelect={setSelected} />
-          ))}
-        </div>
+        {!selected && (
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((t) => (
+              <TemplateCard key={t.id} template={t} accent={accent} onSelect={setSelected} />
+            ))}
+          </div>
+        )}
 
         {selected && (
-          <div className="mt-10 rounded-xl border border-neutral-200 p-6 bg-white">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h3 className="font-medium">Selected: {selected.name}</h3>
-                <p className="text-sm text-neutral-600">Category: {selected.category}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="px-4 py-2 rounded-md border border-neutral-300 bg-white hover:border-neutral-400 text-sm">Export HTML</button>
-                <button className="px-4 py-2 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 text-sm">Continue to customize</button>
-              </div>
-            </div>
-          </div>
+          <Editor
+            initial={selected}
+            accent={accent}
+            onAccentChange={setAccent}
+            onClose={() => setSelected(null)}
+          />
         )}
       </div>
     </section>
