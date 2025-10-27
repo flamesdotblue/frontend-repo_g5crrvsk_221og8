@@ -1,137 +1,98 @@
 import React, { useMemo, useState } from 'react';
-import Editor from './Editor.jsx';
 
-const CATEGORIES = ['All', 'Landing', 'Portfolio', 'Dashboard', 'Blog'];
-
-const TEMPLATES = [
-  { id: 'alpha', name: 'Alpha Landing', category: 'Landing', description: 'Hero-led layout with feature grid and testimonials.' },
-  { id: 'folio', name: 'Folio Personal', category: 'Portfolio', description: 'Case-study cards with sticky project sidebar.' },
-  { id: 'insight', name: 'Insight Blog', category: 'Blog', description: 'Editorial style with featured story carousel.' },
-  { id: 'pulse', name: 'Pulse Dashboard', category: 'Dashboard', description: 'KPIs, charts, and modular widgets.' },
-  { id: 'signal', name: 'Signal SaaS', category: 'Landing', description: 'Conversion-focused layout with pricing switcher.' },
-  { id: 'studio', name: 'Studio Portfolio', category: 'Portfolio', description: 'Masonry gallery with smooth filtering.' },
+const baseTemplates = [
+  {
+    id: 'saas-clean',
+    name: 'SaaS Clean',
+    category: 'SaaS',
+    description: 'Minimal landing page with gradient accents and pricing blocks.',
+    accent: '#60a5fa',
+  },
+  {
+    id: 'portfolio-modern',
+    name: 'Portfolio Modern',
+    category: 'Portfolio',
+    description: 'Split hero, project grid, testimonials, and contact section.',
+    accent: '#34d399',
+  },
+  {
+    id: 'startup-bold',
+    name: 'Startup Bold',
+    category: 'Startup',
+    description: 'Bold typography, angled sections, and call-to-action focus.',
+    accent: '#f472b6',
+  },
 ];
 
-function TemplateCard({ template, accent, onSelect }) {
-  return (
-    <div className="group rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-      <div
-        className="aspect-video w-full"
-        style={{
-          background: `linear-gradient(135deg, ${accent} 0%, rgba(255,255,255,0.9) 100%)`,
-        }}
-      >
-        <div className="h-full w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/0 via-white/0 to-white/50"></div>
-      </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="font-medium text-lg">{template.name}</h3>
-            <p className="text-sm text-neutral-600 mt-1">{template.description}</p>
-          </div>
-          <span className="inline-flex items-center text-xs font-medium rounded-full border border-neutral-200 px-2 py-1 bg-white text-neutral-700">
-            {template.category}
-          </span>
-        </div>
-        <div className="mt-4 flex items-center justify-between">
-          <button
-            onClick={() => onSelect(template)}
-            className="px-3 py-2 text-sm rounded-md bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
-          >
-            Use this template
-          </button>
-          <a href="#" className="text-sm text-neutral-700 hover:text-neutral-900">Preview</a>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ColorSwatch({ color, selected, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      aria-label={`Choose ${color}`}
-      className={`h-8 w-8 rounded-full border ${selected ? 'ring-2 ring-offset-2 ring-neutral-900' : 'border-neutral-300'}`}
-      style={{ backgroundColor: color }}
-    />
-  );
-}
-
-function Templates() {
+export default function Templates({ onSelectTemplate }) {
+  const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
-  const [accent, setAccent] = useState('#ef4444'); // soft red accent by default
-  const [selected, setSelected] = useState(null);
-
-  const colors = ['#ef4444', '#0ea5e9', '#22c55e', '#a855f7', '#f59e0b', '#111827'];
 
   const filtered = useMemo(() => {
-    if (category === 'All') return TEMPLATES;
-    return TEMPLATES.filter((t) => t.category === category);
-  }, [category]);
+    return baseTemplates.filter((t) => {
+      const q = query.toLowerCase();
+      const matchesQ = t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
+      const matchesC = category === 'All' || t.category === category;
+      return matchesQ && matchesC;
+    });
+  }, [query, category]);
 
   return (
-    <section id="templates" className="relative py-16 sm:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+    <section id="templates" className="relative py-16 border-t border-white/10">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Customizable Web Templates</h2>
-            <p className="mt-2 text-neutral-600 max-w-2xl">
-              Choose a starting point, tweak colors and layout, then export. All templates are responsive and production-ready.
-            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold">Templates</h2>
+            <p className="mt-1 text-white/60">Pick a starting point. Edit anything later in the builder.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`px-3 py-2 text-sm rounded-md border transition-colors ${
-                  category === c
-                    ? 'bg-neutral-900 text-white border-neutral-900'
-                    : 'bg-white text-neutral-900 border-neutral-300 hover:border-neutral-400'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search templates..."
+              className="h-10 w-56 rounded-lg border border-white/15 bg-neutral-900/60 px-3 text-sm outline-none focus:border-white/30"
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="h-10 rounded-lg border border-white/15 bg-neutral-900/60 px-3 text-sm outline-none focus:border-white/30"
+            >
+              <option>All</option>
+              <option>SaaS</option>
+              <option>Portfolio</option>
+              <option>Startup</option>
+            </select>
           </div>
         </div>
 
-        <div className="mt-8 p-4 rounded-xl border border-neutral-200 bg-neutral-50">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-neutral-700">Accent</span>
-              <div className="flex items-center gap-2">
-                {colors.map((c) => (
-                  <ColorSwatch key={c} color={c} selected={accent === c} onClick={() => setAccent(c)} />
-                ))}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => onSelectTemplate?.(t)}
+              className="group relative overflow-hidden rounded-xl border border-white/10 bg-neutral-900/40 text-left"
+            >
+              <div
+                className="h-36 w-full"
+                style={{
+                  background: `linear-gradient(135deg, ${t.accent}33, transparent), radial-gradient(600px 200px at 0% 0%, ${t.accent}22, transparent), radial-gradient(600px 200px at 100% 100%, ${t.accent}22, transparent)`,
+                }}
+              />
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium">{t.name}</h3>
+                  <span className="text-xs text-white/60">{t.category}</span>
+                </div>
+                <p className="mt-1 text-sm text-white/70">{t.description}</p>
+                <div className="mt-3 h-2 w-16 rounded-full" style={{ background: t.accent }} />
               </div>
-            </div>
-            <div className="text-sm text-neutral-600">
-              Tip: The accent updates the preview gradient so you can feel the vibe.
-            </div>
-          </div>
+              <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform">
+                <div className="p-3 text-center text-sm bg-white/5">Click to open in builder</div>
+              </div>
+            </button>
+          ))}
         </div>
-
-        {!selected && (
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((t) => (
-              <TemplateCard key={t.id} template={t} accent={accent} onSelect={setSelected} />
-            ))}
-          </div>
-        )}
-
-        {selected && (
-          <Editor
-            initial={selected}
-            accent={accent}
-            onAccentChange={setAccent}
-            onClose={() => setSelected(null)}
-          />
-        )}
       </div>
     </section>
   );
 }
-
-export default Templates;

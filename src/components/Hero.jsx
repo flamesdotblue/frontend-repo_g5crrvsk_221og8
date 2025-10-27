@@ -1,42 +1,31 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
+import { Star } from 'lucide-react';
 
-function Hero() {
+export default function Hero() {
   return (
-    <section id="home" className="relative w-full min-h-[80vh] sm:min-h-[90vh] flex items-center">
-      {/* Spline cover background */}
+    <section className="relative min-h-[60vh] w-full overflow-hidden">
       <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/zhZFnwyOYLgqlLWk/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-        {/* subtle gradient edges that don't block interaction */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-white/20 to-white"></div>
+        <Spline scene="https://prod.spline.design/6p9j3Kk0hJfXkC7e/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-neutral-950/10 via-neutral-950/40 to-neutral-950" />
 
-      {/* Content */}
-      <div className="relative z-10 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-28">
-          <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-3 py-1 text-xs font-medium text-neutral-700 shadow-sm">
-              Modern, minimalist templates — customize in minutes
-            </span>
-            <h1 className="mt-6 text-4xl sm:text-6xl font-semibold tracking-tight">
-              Build polished sites fast with <span className="text-neutral-900">tempweball</span>
-            </h1>
-            <p className="mt-5 text-neutral-600 text-base sm:text-lg leading-relaxed">
-              A clean SaaS experience offering a curated library of responsive web templates. Personalize colors, layout, and content — then launch with confidence.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <a href="#templates" className="inline-flex justify-center items-center px-5 py-3 rounded-md bg-neutral-900 text-white font-medium hover:bg-neutral-800 transition-colors">
-                Browse templates
-              </a>
-              <a href="#templates" className="inline-flex justify-center items-center px-5 py-3 rounded-md border border-neutral-300 bg-white text-neutral-900 font-medium hover:border-neutral-400 transition-colors">
-                Start customizing
-              </a>
-            </div>
-          </div>
+      <div className="relative mx-auto max-w-6xl px-4 pt-28 pb-16">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-neutral-900/60 px-3 py-1 text-xs text-white/80">
+          <Star size={14} className="text-yellow-400" />
+          Drag & drop website builder now in beta
+        </div>
+        <h1 className="mt-6 text-4xl md:text-6xl font-semibold tracking-tight">
+          Design. Edit. Ship. Faster.
+        </h1>
+        <p className="mt-4 max-w-2xl text-white/70">
+          Build beautiful pages in minutes with a live editor, full-width 3D hero, and exportable code. No setup required.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#builder" className="rounded-lg bg-white text-neutral-900 px-4 py-2 font-medium hover:bg-white/90">Open Builder</a>
+          <a href="#templates" className="rounded-lg border border-white/15 px-4 py-2 text-white/90 hover:border-white/25">Browse Templates</a>
         </div>
       </div>
     </section>
   );
 }
-
-export default Hero;
